@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package KP2D;
+
+service Kp2d {
+  rpc align(ImagePair) returns (AlignReply) {};// 将图片校准后返回
+  rpc getEssentialMatrix(ImagePair) returns (GetEssentialMatrixReply) {};// 返回投影矩阵
+  rpc getKPPosDescScore(ImgAndThr) returns (GetKPPosDescScoreReply ) {};// 获取点和描述符
+  rpc getKPPosDescScoreMap(ImgAndThr) returns (GetKPPosDescScoreMapReply ) {};// 获取点和描述符的热力图
+}
+
+
+message Image{
+  optional bytes image = 1;
+  optional string path = 2;
+}
+
+message ImgAndThr {
+  Image img=1;
+  optional float threshold =2;
+}
+
+message ImagePair{
+  Image imageA=1;
+  Image imageB=2;
+}
+
+message Tensor {
+  repeated float data =1;
+  repeated int32 shape =2;
+}
+
+message AlignReply {
+  // 图片A 经过 H矩阵变换之后截取的和图片B重合的区域
+  Image imgA_same =1;
+  // 图片B 和图片A中重合的区域
+  Image imgB_same =2;
+  // 经过变换之后的A矩阵中重合的区域,注意这个座标系是在图片B的座标系
+  repeated int32 imgA_roi=3;
+  // 图片B中重合区域
+  repeated int32 imgB_roi=4;
+  int32 status=5;
+}
+
+message GetEssentialMatrixReply {
+  Tensor matrix =1;
+  int32 status=2;
+}
+
+message GetKPPosDescScoreReply {
+  optional Tensor kp=1;
+  optional Tensor desc=2;
+  int32 status=3;
+}
+
+message GetKPPosDescScoreMapReply {
+  optional Tensor prob=1;
+  optional Tensor desc=2;
+  int32 status=3;
+}
