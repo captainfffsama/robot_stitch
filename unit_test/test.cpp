@@ -55,7 +55,7 @@ int main()
 {
     cv::Mat src = cv::imread("D:\\temp\\1.jpg");
 
-    RobotImageStitch imgStitch("127.0.0.1:52003");
+    RobotImageStitch imgStitch("localhost:52003",0.25);
     cv::Mat result;
     imgStitch(src,result);
     cv::imwrite("D:\\temp\\r.jpg", result);
