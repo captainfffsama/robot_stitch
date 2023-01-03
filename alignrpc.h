@@ -5,30 +5,29 @@
 #include <grpcpp/client_context.h>
 #include <grpcpp/create_channel.h>
 #include <grpcpp/security/credentials.h>
-#include "opencv2/opencv.hpp"
-#include "kp2d.grpc.pb.h"
 
-#include <QImage>
 #include <QBuffer>
+#include <QImage>
 
+#include "kp2d.grpc.pb.h"
+#include "opencv2/opencv.hpp"
 
-class AlignRpc
-{
-public:
-    AlignRpc(std::shared_ptr<grpc::Channel> channel)
-        : stub_(KP2D::Kp2d::NewStub(channel)){};
+class AlignRpc {
+ public:
+  AlignRpc(std::shared_ptr<grpc::Channel> channel)
+      : stub_(KP2D::Kp2d::NewStub(channel)){};
 
-    int getHMatrix(const std::string& img1base64,const std::string& img2base64,cv::Mat& H);
+  int getHMatrix(const std::string& img1base64, const std::string& img2base64,
+                 cv::Mat& H);
 
-    static std::string img2base64(const cv::Mat& imgMat,const QString& imgExt);
+  static std::string img2base64(const cv::Mat& imgMat, const QString& imgExt);
 
-
-private:
-    std::unique_ptr<KP2D::Kp2d::Stub> stub_;
+ private:
+  std::unique_ptr<KP2D::Kp2d::Stub> stub_;
 };
 
-namespace  {
-    void mat2QImage(const cv::Mat& mat, QImage& dstImg);
+namespace {
+void mat2QImage(const cv::Mat& mat, QImage& dstImg);
 
 }
-#endif // ALIGNRPC_H
+#endif  // ALIGNRPC_H
