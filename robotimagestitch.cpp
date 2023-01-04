@@ -20,17 +20,11 @@ void cvPointTransByH(const std::vector<cv::Point2f> &srcPoint,
   }
 }
 
-void resizeImg(const cv::Mat &input, cv::Mat &output, float xRate,
-               float yRate) {
-  cv::resize(input, output, cv::Size(), xRate, yRate);
-}
-
 }  // namespace
 
-RobotImageStitch::RobotImageStitch(
-    const std::string &host, float rRate,
-    const cv::Vec3b &colorRangeUpper,
-    const cv::Vec3b &colorRangeLower)
+RobotImageStitch::RobotImageStitch(const std::string &host, float rRate,
+                                   const cv::Vec3b &colorRangeUpper,
+                                   const cv::Vec3b &colorRangeLower)
     : resizeFactor(rRate),
       colorUpper(colorRangeUpper),
       colorLower(colorRangeLower) {
@@ -46,12 +40,14 @@ int RobotImageStitch::operator()(const cv::Mat &img, cv::Mat &outImg) const {
   getImgPatch(img, imgPatchs, colorUpper, colorLower);
 
   cv::Mat imgA, imgB;
-  resizeImg(imgPatchs[0], imgA, resizeFactor, resizeFactor);
-  resizeImg(imgPatchs[1], imgB, resizeFactor, resizeFactor);
+  cv::resize(imgPatchs[0], imgA, cv::Size(), resizeFactor, resizeFactor);
+  cv::resize(imgPatchs[1], imgB, cv::Size(), resizeFactor, resizeFactor);
 
+#ifdef UNIT_TEST
   // DEBUG:
   cv::imwrite("D:\\temp\\t1.jpg", imgPatchs[0]);
   cv::imwrite("D:\\temp\\t2.jpg", imgPatchs[1]);
+#endif
 
   std::string imgAbase64 = AlignRpc::img2base64(imgA, "jpg");
   std::string imgBbase64 = AlignRpc::img2base64(imgB, "jpg");
@@ -64,6 +60,7 @@ int RobotImageStitch::operator()(const cv::Mat &img, cv::Mat &outImg) const {
     workFlag = -1;
   }
   H = ((rMInv * H) * rM);
+
 #ifdef UNIT_TEST
   std::cout << "H ori: " << H << std::endl;
 #endif
@@ -75,10 +72,12 @@ int RobotImageStitch::operator()(const cv::Mat &img, cv::Mat &outImg) const {
   std::vector<cv::Point2f> patchACornersTrans;
 
   cvPointTransByH(patchACorners, H, patchACornersTrans);
+
+#ifdef UNIT_TEST
   for (const auto &p : patchACornersTrans) {
     std::cout << p << std::endl;
   }
-
+#endif
   int minx = std::numeric_limits<int>::max();
   int miny = std::numeric_limits<int>::max();
   int maxx = std::numeric_limits<int>::min();

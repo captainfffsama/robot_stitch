@@ -55,4 +55,24 @@ SOURCES += \
     kp2d.pb.cc
 
 
+#TEMPLATE = app
+#SOURCES += \
+#    unit_test/test.cpp
 
+#include($(PROJECTSRC)/base/pri/grpc.pri)
+#include($(PROJECTSRC)/base/pri/opencv.pri)
+#win32-msvc* {
+#    QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
+#}
+
+#INCLUDEPATH += D:/workspace/robot_stitch/debug/lib
+
+#LIBS += -LD:/workspace/robot_stitch/debug/lib
+
+#win32{
+#    CONFIG(debug, debug|release) {
+#        LIBS += -lrobot_stitch
+#    } else {
+#        LIBS += -lrobot_stitch
+#    }
+#}

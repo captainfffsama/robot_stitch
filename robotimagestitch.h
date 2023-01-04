@@ -39,8 +39,6 @@ bool isSameColor(const cv::Vec3b& betest, const cv::Vec3b& upper,
 void cvPointTransByH(const std::vector<cv::Point2f>& srcPoint,
                      const cv::Mat& mat, std::vector<cv::Point2f>& dstPoint);
 
-void resizeImg(const cv::Mat& input, cv::Mat& output, float xRate = 0.25,
-               float yRate = 0.25);
 }  // namespace
 
 #endif  // ROBOTIMAGESTITCH_H
